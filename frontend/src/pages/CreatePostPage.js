@@ -1,6 +1,7 @@
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import { useState } from "react";
+import { Navigate } from "react-router-dom";
 
 
 const modules = {
@@ -25,19 +26,30 @@ export default function CreatePostPage() {
     const [summary, setSummary] = useState('');
     const [content, setContent] = useState('');
     const [files, setFiles] = useState('');
-    function createPost(event) {
+    const [redirect, setRedirect] = useState(false);
+    async function createPost(event) {
         const data = new FormData();
         data.set('title', title);
         data.set('summary', summary);
         data.set('content', content);
         data.set('file', files[0]);
-        console.log(title, summary, content, files);
         event.preventDefault();
-        fetch('http://localhost:7777/post', {
+        const response = await fetch('http://localhost:7777/post', {
             method: 'POST',
             body: data,
-        })
+            credentials: 'include',
+        });
+        if (response.status === 200) {
+            setRedirect(true);
+        }
     }
+
+
+    if (redirect) {
+        return <Navigate to={'/'} />
+    }
+
+
     return (
         <form onSubmit={createPost}>
             <input type="title" placeholder={"제목을 입력하세요."}

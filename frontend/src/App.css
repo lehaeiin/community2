@@ -21,7 +21,9 @@ header nav {
 
 header a {
   text-decoration: none; /* 텍스트에서 밑줄 제거 */
+  color: inherit;
 }
+
 
 header a.logo {
   font-weight: bold;
@@ -47,10 +49,11 @@ div.post {
   margin-bottom: 20px;
 }
 
-div.post div.texts h2 {
-  margin: 0; /* 텍스트 위쪽 여백을 제거 */
-  font-size: 18px;
+div.post div.texts a {
+  text-decoration: none;
+  color: inherit;
 }
+
 
 div.post p.info {
   margin: 6px 0px; /* 왼쪽으로 붙이기 */
@@ -88,6 +91,43 @@ button {
   border-radius: 5px; /* 테두리 모서리를 둥글게 */
 }
 
+div.single-post div.image {
+  max-height: 200px;
+  display: flex;
+  overflow: hidden;
+}
+
+
+div.single-post div.image img {
+  object-fit: cover;
+  object-position: center center;
+  width: 100%;
+}
+
+
+div.single-post h1 {
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+
+div.single-post time {
+  text-align: center;
+  display: block;
+  color: #aaa;
+}
+
+
+div.single-post div.author {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+
+div.single-post div.content {
+  line-height: 1.5rem;
+}
+
 @media screen and (max-width: 560px) {
   main {
     font-size: 12px;
@@ -101,4 +141,8 @@ button {
   .search-input {
     width: 130px;
   }
+  div.post {
+    grid-template-columns: 1fr;
+  }
 }
+

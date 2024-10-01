@@ -6,13 +6,19 @@ const User = require('./models/User');
 const jwt = require('jsonwebtoken');
 const cookieParser = require('cookie-parser');
 const config = require('./config.json');
+const multer = require('multer');
+const uploadMiddleware = multer({dest: 'uploaded/'});
+const fs = require('fs');
+
 
 app.use(cors({credentials:true, origin:'http://localhost:3000'}));
 app.use(express.json()); /* JSON 형식으로 반환 */
 app.use(cookieParser());
 
+
 mongoose.connect(config.db_string);
 const secret = config.jwt_key;
+
 
 /* POST 방식으로 회원가입 API 열어주기 */
 app.post('/register', async (req, res) => {
@@ -24,6 +30,7 @@ app.post('/register', async (req, res) => {
         res.status(400).json(e);
     }
 })
+
 
 /* POST 방식으로 로그인 API 열어주기 */
 app.post('/login', async (req, res) => {
@@ -49,6 +56,7 @@ app.post('/login', async (req, res) => {
     }
 });
 
+
 app.get('/profile', (req, res) => {
     const token = req.cookies.token;
     jwt.verify(token, secret, {}, (err, info) => {
@@ -57,8 +65,19 @@ app.get('/profile', (req, res) => {
     })
 })
 
+
 app.post('/logout', (req, res) => {
     res.cookie('token', '').json('');
 })
+
+
+app.post('/post', uploadMiddleware.single('file'), (req, res) => {
+    const {originalname, path} = req.file;
+    const parts = originalname.split('.');
+    const ext = parts[parts.length - 1];
+    const newPath = path + '.' + ext
+    fs.renameSync(path, newPath);
+});
+
 
 app.listen(7777);
